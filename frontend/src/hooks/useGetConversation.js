@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 
+
 const useGetConversation = ()=>{
 
 
@@ -22,7 +23,7 @@ const useGetConversation = ()=>{
                 {
                     throw new Error(data.error);
                 }
-                setConversations(data);                
+                setConversations(data);              
             } catch (error) {
                 toast.error(error.message);
             }
