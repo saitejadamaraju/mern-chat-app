@@ -6,14 +6,16 @@ const useGetMessages = () =>{
 
     const [loading,setLoading]=useState(false);
     const {messages,setMessages,selectedConversation} = useConversation();
+    const [chatPage,setChatPage]=useState(1);
 
     useEffect(()=>{
         const getMessages = async () => {
          
             setLoading(true);
             try {
-    
-                const res = await fetch(`/api/messages/${selectedConversation._id}`);
+                
+                //const res = await fetch(`/api/messages/${selectedConversation._id}`);
+                const res = await fetch(`/api/messages/${selectedConversation._id}?page=${chatPage}`);
                 const data = await res.json();
     
                 if(data.error)
@@ -21,7 +23,10 @@ const useGetMessages = () =>{
                   throw new Error(data.error);
                 }
                 
-                setMessages(data)
+                // console.log(`chat page ${chatPage} data is ${data}`);
+                    setMessages(data)      
+                         
+                
                 
             } catch (error) {
                 
@@ -35,9 +40,9 @@ const useGetMessages = () =>{
 
         if (selectedConversation?._id) getMessages();
 
-    },[selectedConversation?._id, setMessages])
+    },[selectedConversation?._id, setMessages,chatPage])
 
-    return { messages, loading };
+    return { messages, loading,setChatPage,chatPage};
     
 }
 

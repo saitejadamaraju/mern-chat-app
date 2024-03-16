@@ -1,32 +1,44 @@
-import { useEffect } from "react";
+// import { useEffect } from "react";
 import useConversation from "../../zustand/useConversation";
 import MessageInput from "./MessageInput";
 import Messages from "./Messages";
 import { TiMessages } from "react-icons/ti";
+import { IoArrowBack } from "react-icons/io5";
 import { useAuthContext } from "../../context/AuthContext";
 
 
 const MessageContainer = () => {
 
-	const {selectedConversation,setSelectedConversation } = useConversation();
-
-    useEffect(()=>{
+	const {selectedConversation,setSelectedConversation} = useConversation();
+	
+    //  
+    // useEffect(()=>{
       
-      
-		return ()=> setSelectedConversation(null);
+	// 	return ()=> setSelectedConversation(null);
 
-	},[setSelectedConversation])
+	// },[setSelectedConversation])
+
+	const goToConvos = ()=>{
+
+		setSelectedConversation(null);
+	}
 
 	return (
-		<div className='md:min-w-[450px] flex flex-col'>
+		<div className='md:min-w-[450px] flex flex-col '>
 			{!selectedConversation ? (
 				<NoChatSelected />
 			) : (
 				<>
 					{/* Header */}
-					<div className='bg-slate-500 px-4 py-2 mb-2'>
+					<div className='bg-slate-500 px-4 py-2 mb-2 flex justify-between items-center'>
+						
 						<span className='label-text'>To:</span>{" "}
 						<span className='text-gray-900 font-bold'>{selectedConversation.fullName}</span>
+						
+						<button onClick={goToConvos} type='submit' className='sss text-black text-right'>
+							<IoArrowBack className='w-3 h-3 outline-none' />{" "}
+						</button>
+						
 					</div>
 					<Messages />
 					<MessageInput />

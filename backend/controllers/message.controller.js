@@ -61,14 +61,51 @@ export const getMessages = async(req,res)=>{
 
         const {id:userToChatId} = req.params;
         const senderId = req.user._id;
+        let page=req.query?.page;
+        const limit=15;
+        let messages;
+         
+        if(page)
+        {
+            const conversation = await Conversation.findOne({
+                participants :{$all:[senderId,userToChatId]},
+            });
+    
+            if(!conversation) return res.status(200).json([]);
+            
+    
+            const totalMessages=conversation.messages.length;
+    
+            const totalPages= Math.ceil(totalMessages / limit);
+    
+            //page=totalPages-page+1;
+    
+            const convos = await Conversation.findOne({
+                participants :{$all:[senderId,userToChatId]},
+            }).populate({
+                path: "messages",
+                options: {
+                    sort: { createdAt: -1 }, // Sort messages by createdAt in descending order
+                    skip: (page - 1) * limit, // Skip messages based on the page number and limit
+                    limit: limit, // Limit the number of messages fetched per page
+                },
+            });
+            
+            messages=convos.messages.reverse();
+    
+        }
+        else
+        {
+            
+		    const conversation = await Conversation.findOne({
+			    participants: { $all: [senderId, userToChatId] },
+		    }).populate("messages"); // NOT REFERENCE BUT ACTUAL MESSAGES
 
-        const conversation = await Conversation.findOne({
-            participants :{$all:[senderId,userToChatId]},
-        }).populate("messages");
+		    if (!conversation) return res.status(200).json([]);
 
-        if(!conversation) return res.status(200).json([]);
-
-        const messages=conversation.messages;
+		    messages = conversation.messages;
+        }
+        
         res.status(200).json(messages);
         
     } catch (error) {

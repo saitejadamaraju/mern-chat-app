@@ -7,6 +7,8 @@ const useConversation = create((set) => ({
 	setMessages: (messages) => set({ messages }),
 	searchString:null,
 	setSearchString:(searchString)=>set({searchString}),
+	isSmallScreen:false,
+	setIsSmallScreen:(isSmallScreen)=>set({isSmallScreen}),
 }));
 
 export default useConversation;
